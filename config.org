@@ -1,10 +1,21 @@
+* Code
+** Establish Lexical Binding
+I thought something more elaborate was necessary to get this in my
+config. It turns out you can tangle this comment into your config
+directly. At least I became more proficient at Elisp writing the more
+elaborate solution.
+
 #+begin_src emacs-lisp
   ;; -*- lexical-binding: t; -*-
-  (message "Greetings from tangled config file!")
+#+end_src
 
-  (setq custom-file (locate-user-emacs-file "emacs-custom.el"))
-  (load custom-file)
+** The "Remark" Macro
+Once in a while I need this to
 
+1. Add S-expression-level comments.
+2. Comment out S-expressions.
+
+#+begin_src emacs-lisp
   (cl-defmacro remark (docstring &rest body &key (active t) &allow-other-keys)
     "Add a comment to some S-expression.
 
@@ -12,6 +23,14 @@
   out."
     (when active
       `(progn ,@body)))
+#+end_src
+
+** The Rest
+#+begin_src emacs-lisp
+  (setq custom-file (locate-user-emacs-file "emacs-custom.el"))
+  (load custom-file)
+
+
 
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
