@@ -86,3 +86,15 @@ Once in a while I need this to
   (use-package impatient-showdown
     :ensure t)
 #+end_src
+
+
+
+** Org
+*** Org Tempo
+It's just /so much easier/ to use ~<s~ to set up a source block,
+rather than have to rely on ~C-c C-,~; which, while more general, is
+in many cases overkill and ultimately more cumbersome.
+
+#+begin_src emacs-lisp
+  (require 'org-tempo)
+#+end_src
