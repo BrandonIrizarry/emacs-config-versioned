@@ -27,9 +27,7 @@ Limit Isearch in Dired to file names.
  '(exec-path
    '("/usr/local/bin" "/usr/bin" "/bin" "/usr/local/games" "/usr/games" "/usr/lib/emacs/27.1/x86_64-linux-gnu" "~/.nvm/versions/node/v18.12.1/bin/"))
  '(helm-M-x-show-short-doc t)
- '(helm-minibuffer-history-mode t)
- '(helm-mode nil)
- '(help-window-select nil)
+ '(help-window-select t)
  '(icomplete-vertical-candidates-below-end t nil nil "
 
 Show completion candidates more in the center.

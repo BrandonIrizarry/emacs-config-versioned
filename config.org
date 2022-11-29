@@ -1,3 +1,4 @@
+#+STARTUP: show2levels
 * Code
 ** Establish Lexical Binding
 I thought something more elaborate was necessary to get this in my
@@ -6,7 +7,34 @@ directly. At least I became more proficient at Elisp writing the more
 elaborate solution.
 
 #+begin_src emacs-lisp
-  ;; -*- lexical-binding: t; -*-
+  ;; -*- lexical-binding: t -*-
+#+end_src
+
+#+begin_src emacs-lisp
+  (defun send-zero ()
+      (let ((zero 0))
+	(lambda ()
+	  zero)))
+
+  (condition-case nil
+      (progn
+	(fset 'fn (send-zero))
+	(fn))
+    (error
+     (message
+      "Oops, lexical binding isn't enabled in the tangled output of this config.
+  To fix, add
+
+  ;; -*- lexical-binding: t -*-
+
+  as the first line of the first source block in this file.")))
+
+#+end_src
+
+** Setting and Loading Emacs' Customize Settings
+#+begin_src emacs-lisp
+  (setq custom-file (locate-user-emacs-file "emacs-custom.el"))
+  (load custom-file)
 #+end_src
 
 ** The "Remark" Macro
@@ -25,76 +53,150 @@ Once in a while I need this to
       `(progn ,@body)))
 #+end_src
 
-** The Rest
+** Unset Pesky Laptop Web Navigation Keys
 #+begin_src emacs-lisp
-  (setq custom-file (locate-user-emacs-file "emacs-custom.el"))
-  (load custom-file)
+  (global-unset-key (kbd "<XF86Back>"))
+  (global-unset-key (kbd "<XF86Forward>"))
+#+end_src
 
+** Make Sure Emacs Knows Where To Find Nvm-Installed Node
+Org Babel needs this to find Node when evaluating JS (Node).
 
+#+begin_src emacs-lisp
+  (let ((path (getenv "PATH"))
+	(nvm-path "~/.nvm/versions/node/v18.12.1/bin"))
+    (setenv "PATH" (format "%s:%s" nvm-path path)))
+#+end_src
 
+** Simply Message When Visiting Link to File under Version Control
+Even if we set this switch, a problem remains: startup Emacs doesn't
+see this switch just yet, and so we must respond "Yes" each time to a
+GUI-widget prompt offered to us by Emacs.
+
+#+begin_src emacs-lisp
+  (setq vc-follow-symlinks t)
+#+end_src
+
+** Setting Up the Package System
+*** Add Melpa, and Initialize
+#+begin_src emacs-lisp
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (package-initialize)
+#+end_src
 
+*** Bootstrap Use Package
+#+begin_src emacs-lisp
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
     (package-install 'use-package))
+#+end_src
 
-  (use-package emacs-utils
-    :bind ("C-`" . #'bci/toggle-activate-mark)
-    :load-path "utils/"
-    :init
-    (global-unset-key (kbd "<XF86Back>"))
-    (global-unset-key (kbd "<XF86Forward>"))
-
-    (remark "Not sure we need this anymore."
-      :active t
-      (let ((path (getenv "PATH"))
-	    (nvm-path "~/.nvm/versions/node/v18.12.1/bin"))
-	(setenv "PATH" (format "%s:%s" nvm-path path)))))
-
+** Installed Packages
+*** Paredit
+#+begin_src emacs-lisp
   (use-package paredit
     :ensure t
     :hook (emacs-lisp-mode lisp-interaction-mode))
+#+end_src
 
+*** Magit
+#+begin_src emacs-lisp
   (use-package magit
     :ensure t)
+#+end_src
 
+*** The Rest
+
+*** Web Mode
+#+begin_src emacs-lisp :noweb yes
   (use-package web-mode
     :ensure t
-    :mode "\\.html\\'")
+    :mode "\\.html\\'"
+    :bind ("C-c !" . #'bci/activate-web-project)
+    :config
+    <<web-mode-config>>)
+#+end_src
 
+*** Simple Httpd
+#+begin_src emacs-lisp
   (use-package simple-httpd
     :ensure t)
+#+end_src
 
-  (use-package bci-web-mode-utils
-    :after (web-mode simple-httpd)
-    :load-path "utils/"
-    :bind ("C-c !" . #'bci/activate-html-css-javascript))
-
+*** Emmet Mode
+#+begin_src emacs-lisp
   (use-package emmet-mode
     :ensure t
     :after web-mode
     :hook web-mode)
+#+end_src
 
+*** Js2 Mode
+#+begin_src emacs-lisp
   (use-package js2-mode
     :ensure t)
+#+end_src
 
+*** Vterm
+#+begin_src emacs-lisp
   (use-package vterm
     :ensure t)
+#+end_src
 
+*** Impatient Showdown
+#+begin_src emacs-lisp
   (use-package impatient-showdown
     :ensure t)
 #+end_src
 
+** Builtin Packages
+*** Org
+#+begin_src emacs-lisp
+  (use-package org
+    :config
+    (setq org-src-window-setup 'current-window))
+#+end_src
 
-
-** Org
-*** Org Tempo
+**** Org Tempo
 It's just /so much easier/ to use ~<s~ to set up a source block,
 rather than have to rely on ~C-c C-,~; which, while more general, is
 in many cases overkill and ultimately more cumbersome.
 
 #+begin_src emacs-lisp
-  (require 'org-tempo)
+  (use-package org-tempo
+    :after org)
+#+end_src
+
+*** Ido
+#+begin_src emacs-lisp
+  (use-package ido
+    :init
+    (ido-mode 1)
+    :config
+    (setq ido-show-dot-for-dired nil))
+
+#+end_src
+
+** Utils
+*** Web Mode
+**** Enable Current HTML File As a Web Project
+#+begin_src emacs-lisp :tangle no :noweb-ref web-mode-config
+  (defun bci/activate-web-project ()
+    (interactive)
+    (httpd-start)
+    (setq httpd-root default-directory)
+    (message "Current web project is now locally hosted!"))
+#+end_src
+
+*** Generic
+**** Toggle Activating the Region
+#+begin_src emacs-lisp
+  (defun bci/toggle-activate-mark ()
+  (interactive)
+  (if (region-active-p)
+      (deactivate-mark)
+    (activate-mark)))
+
+  (bind-key "C-`" #'bci/toggle-activate-mark)
 #+end_src
