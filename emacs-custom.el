@@ -38,10 +38,6 @@ Show completion candidates more in the center.
 Don't let Icomplete Vertical take up too much space.
 
 ")
- '(ido-auto-merge-work-directories-length -1)
- '(ido-enable-flex-matching t)
- '(ido-ignore-directories '("\\`CVS/" "\\`\\.\\./" "\\`\\./"))
- '(ido-show-dot-for-dired nil)
  '(impatient-showdown-flavor 'github)
  '(impatient-showdown-markdown-background-color "white")
  '(isearch-lazy-count t)
@@ -64,7 +60,7 @@ These are my Org capture templates.
  '(org-default-notes-file "~/Desktop/Org/Notes.org")
  '(org-directory "~/Desktop/Org")
  '(package-selected-packages
-   '(impatient-showdown vertico helm simple-httpd emmet-mode vterm org js2-mode web-mode magit paredit use-package zeno-theme))
+   '(sudo-edit impatient-showdown vertico helm simple-httpd emmet-mode vterm org js2-mode web-mode magit paredit use-package zeno-theme))
  '(transient-mark-mode nil)
  '(undo-no-redo t)
  '(warning-suppress-types '((comp) (comp) (comp))))

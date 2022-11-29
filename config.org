@@ -190,14 +190,35 @@ in many cases overkill and ultimately more cumbersome.
     :after org)
 #+end_src
 
-*** Ido
-#+begin_src emacs-lisp
-  (use-package ido
-    :init
-    (ido-mode 1)
-    :config
-    (setq ido-show-dot-for-dired nil))
+*** Vertico
+At first I was skeptical of this package; it looked way too overblown
+and complicated. But as I was having an issue with Ido, I decided to
+try this one out. So far so good, what can I say.
 
+**** Vertico "Base"
+#+begin_src emacs-lisp
+  (use-package vertico
+    :ensure t
+    :init
+    (vertico-mode)
+    :config
+    (vertico-multiform-mode)
+    (setq vertico-multiform-categories
+	  '((file grid)
+	    (buffer grid))))
+#+end_src
+
+**** Vertico Directory
+This starts to make Vertico feel more like Ido when using ~C-x
+C-f~. Somre goodies are missing, for example, '//' to go to the root
+directory, and '~/' to go to my home directory.
+
+#+begin_src emacs-lisp
+  (use-package vertico-directory
+    :after vertico
+    :bind (:map vertico-map
+		("RET" . #'vertico-directory-enter)
+		("DEL" . #'vertico-directory-delete-word)))
 #+end_src
 
 ** Utils
