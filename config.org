@@ -125,8 +125,6 @@ GUI-widget prompt offered to us by Emacs.
     :ensure t)
 #+end_src
 
-*** The Rest
-
 *** Web Mode
 #+begin_src emacs-lisp :noweb yes
   (use-package web-mode
