@@ -167,6 +167,11 @@ GUI-widget prompt offered to us by Emacs.
     :ensure t)
 #+end_src
 
+*** Sudo Edit
+#+begin_src emacs-lisp
+  (use-package sudo-edit
+    :ensure t)
+#+end_src
 ** Builtin Packages
 *** Org
 #+begin_src emacs-lisp
