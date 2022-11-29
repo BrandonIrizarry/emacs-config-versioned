@@ -68,13 +68,22 @@ Org Babel needs this to find Node when evaluating JS (Node).
     (setenv "PATH" (format "%s:%s" nvm-path path)))
 #+end_src
 
-** Simply Message When Visiting Link to File under Version Control
+** Visiting Links to Files under Version Control
+Don't halt with a yes/no prompt, simply allow and alert us in the
+minibuffer.
+
 Even if we set this switch, a problem remains: startup Emacs doesn't
 see this switch just yet, and so we must respond "Yes" each time to a
 GUI-widget prompt offered to us by Emacs.
 
 #+begin_src emacs-lisp
   (setq vc-follow-symlinks t)
+#+end_src
+
+** Bookmarks
+*** Don't Use Fringe Markers
+#+begin_src emacs-lisp
+  (setq bookmark-set-fringe-mark nil)
 #+end_src
 
 ** Setting Up the Package System
