@@ -53,10 +53,20 @@ Once in a while I need this to
       `(progn ,@body)))
 #+end_src
 
-** Unset Pesky Laptop Web Navigation Keys
+** Unset Some Nuisance Keys
+*** Laptop Web Navigation Keys
 #+begin_src emacs-lisp
   (global-unset-key (kbd "<XF86Back>"))
   (global-unset-key (kbd "<XF86Forward>"))
+#+end_src
+*** Windowing Environment Minimization
+I may choose to rebind this to something else in the future, but for
+now let's prevent ourselves from accidentally using it. While
+non-fatal, it's a bit distracting to have your window suddenly
+minimize on you.
+
+#+begin_src emacs-lisp
+  (global-unset-key (kbd "C-z"))
 #+end_src
 
 ** Make Sure Emacs Knows Where To Find Nvm-Installed Node
